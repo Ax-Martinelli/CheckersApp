@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Registration Page</title>
+
+<script src=
+"https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+</script>
+<script>
+	async function doRegistration() {
+		let suc;
+		const res = await fetch('http://localhost:8080/CheckersApp/LoginServlet?service=register&name=' + $("#username").val() + "&password=" + $("#password").val());
+		suc = await res.text();
+		return suc;
+	}
+	function register() {
+				var regs = doRegistration();
+				regs.then(resp => {
+					console.log(resp);
+					const obj2 = JSON.parse(resp);
+					if(!(obj2.response === "error")) {
+						if(obj2.success === "true") {
+							$("#response").text("Registration successful!");
+						} else {
+							$("#response").text("This username is taken!");
+						}
+					} else {
+						$("#response").text(obj2.message);
+					}
+				}).catch(err => console.error(err));
+	}
+</script>
+
+</head>
+<body style="background-color: beige;">
+		<div
+		style="border: 5px solid; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 10px; background-color: white;">
+		<h2>
+			Please provide your desired username and password.<br/>Note: this is not secure! Do not use a real password!
+		</h2>
+		
+		<p id="response"></p>
+		<div>
+			<form action="javascript:register();" method="POST" class="form" id="loginForm">
+				<label for="username">Username:</label>
+				<br>
+				<input id="username" type="text" name="username">
+				<br>
+				<label for="password">Password:</label>
+				<br>
+				<input id="password" type="text" name="password">
+				<br>
+				<br>
+				<input type="submit" value="Login!">
+			</form>
+		</div>
+	</div>
+	<!--
+    <div id="my-interactive"></div>
+    <script type="module" src="script.js"></script>
+    -->
+</body>
+</html>
