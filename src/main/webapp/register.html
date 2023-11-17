@@ -10,7 +10,7 @@
 <script>
 	async function doRegistration() {
 		let suc;
-		const res = await fetch('http://localhost:8080/CheckersApp/LoginServlet?service=register&name=' + $("#username").val() + "&password=" + $("#password").val());
+		const res = await fetch('http://ec2-3-145-41-84.us-east-2.compute.amazonaws.com:8080/CheckersApp/LoginServlet?service=register&name=' + $("#username").val() + "&password=" + $("#password").val());
 		suc = await res.text();
 		return suc;
 	}

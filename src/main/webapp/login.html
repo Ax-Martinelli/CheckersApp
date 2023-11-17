@@ -10,7 +10,7 @@
 <script>
 	async function getValid() {
 		let valid;
-		const res = await fetch('http://localhost:8080/CheckersApp/LoginServlet?service=login&name=' + $("#username").val() + '&password=' + $("#password").val());
+		const res = await fetch('http://ec2-3-145-41-84.us-east-2.compute.amazonaws.com:8080/CheckersApp/LoginServlet?service=login&name=' + $("#username").val() + '&password=' + $("#password").val());
 		valid = await res.text();
 		return valid;
 	}
@@ -21,7 +21,7 @@
 			const obj2 = JSON.parse(resp);
 			if(!(obj2.response === "error")) {
 				if(obj2.success === "true") {
-					$("#response").text("Login successful!");
+					window.location.replace("http://ec2-3-145-41-84.us-east-2.compute.amazonaws.com:8080/CheckersApp/render.html");
 				} else {
 					$("#response").text("This account does not exist!");
 				}
