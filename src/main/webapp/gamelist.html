@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+<title>List of Games</title>
+
+<script src=
+"https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+</script>
+<script>
+	window.addEventListener("load", (event) => {
+  		console.log("page is fully loaded");
+  		getGameList();
+	});
+	async function getUname() {
+		let valid;
+		const res = await fetch('http://ec2-3-145-41-84.us-east-2.compute.amazonaws.com:8080/CheckersApp/GameListServlet?service=whoami&name=dummy');
+		valid = await res.text();
+		return valid;
+	}
+	async function postNewGame(uname) {
+		let valid;
+		const res = await fetch('http://ec2-3-145-41-84.us-east-2.compute.amazonaws.com:8080/CheckersApp/GameListServlet?service=addpub&name=' + uname);
+		valid = await res.text();
+		getGameList();
+		return valid;
+	}
+	async function getList(uname) {
+		let valid;
+		const res = await fetch('http://ec2-3-145-41-84.us-east-2.compute.amazonaws.com:8080/CheckersApp/GameListServlet?service=list&name=' + uname);
+		valid = await res.text();
+		return valid;
+	}
+	async function acceptGame(gameId) {
+		let valid;
+		const res = await fetch('http://ec2-3-145-41-84.us-east-2.compute.amazonaws.com:8080/CheckersApp/GameListServlet?service=accept&name=dummy&gameId=' + gameId);
+		valid = await res.text();
+		getGameList();
+		return valid;
+	}
+	function makeTable(response) {
+		var output = "<table><tr><th>Game ID</th><th>Opponent</th><th>Match Begin Date</th></tr>";
+		for(let i in response.private) {
+			output += "<tr><td>";
+			output += response.private[i].id;
+			output += "</td><td>";
+			output += response.private[i].opponent;
+			output += "</td><td>";
+		    output += response.private[i].accdate;
+		    output += "</td><td>";
+			output += "<button onclick=\"enterGame(" + response.private[i].id + ");\">Go To Match</button>"
+			output += "</td></tr>";
+		}
+		output += "</table><br>";
+		output += "<table><tr><th>Game ID</th><th>Requesting User</th><th>Date</th><th></th></tr>";
+		for(let i in response.public) {
+			output += "<tr><td>";
+			output += response.public[i].id;
+			output += "</td><td>";
+			output += response.public[i].requser;
+			output += "</td><td>";
+		    output += response.public[i].reqdate;
+		    output += "</td><td>";
+			output += "<button onclick=\"acceptGame(" + response.public[i].id + ");\">Accept Match</button>"
+			output += "</td></tr>";
+		}
+		output += "</table>";
+		return output;
+	}
+	function getGameList() {
+		var valid = getUname();
+		valid.then(resp => {
+			console.log(resp);
+			const obj2 = JSON.parse(resp);
+			if(!(obj2.response === "error")) {
+				$("#greeting").text("Welcome, " + obj2.response + "!");
+				$("#newgame").attr('onClick', 'postNewGame(\"' + obj2.response + '\");');
+				var valid2 = getList(obj2.response);
+				valid2.then(resp2 => {
+					console.log(resp2);
+					const obj3 = JSON.parse(resp2);
+					if(!(obj3.response === "error")) {
+						$("#response").html(makeTable(obj3.response));
+					} else {
+						console.log(obj3.message);
+					}
+				}).catch(err2 => console.error(err2));
+			} else {
+				console.log(obj2.message);
+			}
+		}).catch(err => console.error(err));
+	}
+</script>
+
+</head>
+<body style="background-color: beige;">
+		<div
+		style="border: 5px solid; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 10px; background-color: white;">
+		<h2>
+			This is the game list. 
+		</h2>
+		<h3 id="greeting"></h3>
+		<div>
+			<button id="newgame">Make a new game</button>
+		</div>
+		<div id="response">
+			
+		</div>
+		
+		</div>
+	<!--
+    <div id="my-interactive"></div>
+    <script type="module" src="script.js"></script>
+    -->
+</body>
+</html>

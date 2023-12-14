@@ -20,7 +20,6 @@ import util.DBConnection;
 /**
  * Servlet implementation class LoginServlet
  */
-@WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final Pattern alpha = Pattern.compile("^[a-zA-Z]+$");
@@ -44,6 +43,7 @@ public class LoginServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("application/json");
+		response.addHeader("Access-Control-Allow-Origin", "*");
 		Object otype = request.getParameter("service");
 		if(otype == null) {
 			response.getWriter().print(getError("No request type was provided!"));

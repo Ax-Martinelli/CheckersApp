@@ -24,6 +24,16 @@ public class SharedContext {
 		}
 	}
 	
+	public static String whois(String ip) {
+		String response = "error";
+		for(String key : ipContext.keySet()) {
+			if(ipContext.get(key).equals(ip)) {
+				response = key;
+			}
+		}
+		return response;
+	}
+	
 	public static void heartbeat(String username, String ip) {
 		if(isAuthorized(username, ip)) {
 			authorizedUsers.remove(username);

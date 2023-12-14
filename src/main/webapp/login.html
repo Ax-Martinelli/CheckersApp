@@ -21,7 +21,8 @@
 			const obj2 = JSON.parse(resp);
 			if(!(obj2.response === "error")) {
 				if(obj2.success === "true") {
-					window.location.replace("http://ec2-3-145-41-84.us-east-2.compute.amazonaws.com:8080/CheckersApp/render.html");
+					window.location.replace("http://ec2-3-145-41-84.us-east-2.compute.amazonaws.com:8080/CheckersApp/gamelist.html");
+					//window.location.replace("http://localhost:8080/CheckersApp/gamelist.html");
 				} else {
 					$("#response").text("This account does not exist!");
 				}
